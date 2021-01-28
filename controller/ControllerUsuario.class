@@ -1,0 +1,61 @@
+<?php session_start(); ?>
+<?php
+require "../service/UsuariosServiceImp.class.php";
+//require "../model/usuarios.class.php";
+
+class ControllerUsuario{
+    /*public function agregar(){
+        //objeto de tipo usuario
+        $usuario = new Usuarios();
+        $userService = new UsuariosServiceImp();
+        //modificar lod datos del usuario
+        $usuario->setNombre("Alma");
+        $usuario->setEmail("alma@gmail.com");
+        $usuario->setUsername("Alma1-");
+        $usuario->setPassword(sha1("1234567"));
+        //llamado al metodo guardar de la clase de servicio
+        $userService->guardar($usuario);
+        //lo envío a la vista de autentificación (login)
+       // header ("location:../view/formLogin.html");
+    }*/
+    //********************** */
+    //metodo de produccion
+    public function agregar($usuario){
+        $userService = new UsuariosServiceImp();
+        //Llamando al metodo guardar de la clase de servicio
+        $userService->guardar($usuario);
+        //lo envia a la vista de autentificacion(login)
+        header (".../view/formLogin.html");
+    }
+    //metood parala autenticacion
+    //metodo de desarrollo
+    public function autentificacion($username,$password){
+        $userService = new UsuariosServiceImp();
+        echo $password;
+        //objeto de tipo usuario
+        $usuario= new Usuarios();
+        //llamado al metodo definido enla capa de servicio
+        $usuario= $userService-> buscarPorUsernamePassword($username,$password);
+        if( is_object($usuario)){
+            /*
+            variable de sesion mediante variables locales
+            $_SESSION['nombre'] = $usuario->getNombre();
+            $_SESSION['correo'] = $usuario->getEmail();
+            $_SESSION['id'] = $usuario->getId();*/
+
+            /* variable de sesion mediante un arreglo asociativo*/
+            $_SESSION['miSesion'] = array();
+            $_SESSION['miSesion']['nombre'] = $usuario->getNombre();
+            $_SESSION['miSesion']['correo'] = $usuario->getEmail();
+            $_SESSION['miSesion']['id'] = $usuario->getId();
+            
+           // echo "<br> El usuario es valido";
+           header("location:../view/productos.class.php");
+        }else{
+            //echo "<br> Este usuario no esta registrado en la base de datos";
+            header("location:../view/formLogin.html");
+        }
+    }
+ }
+
+?>
